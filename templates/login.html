@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../CSS/login.css">
+    <link rel="stylesheet" href="../static/CSS/login.css">
     <title>Kaptal-Login</title>
 </head>
 <body>
+    <form action="/login" method="POST">
     <div class="wrapper">
         <div class="login-box">
             <div class="login-header">
@@ -15,13 +16,13 @@
             </div>
 
             <div class="input-box">
-                <input type="text" id="user" class="input-field" required>
-                <label for="user" class="label">User name</label>
-                <i class="bx bx-user icon"></i>
+                <input type="email" name="email_form" id="email" class="input-field"  minlength="3" maxlength="190"required>
+                <label for="email" class="label">Email</label>
+                <i class="bx bx-envelope-open icon"></i>
             </div>
 
             <div class="input-box">
-                <input type="password" id="pass" class="input-field" required>
+                <input type="password" name="pass_form" id="pass" class="input-field" minlength="6" required>
                 <label for="pass" class="label">Password</label>
                 <i class="bx bx-lock-alt icon"></i>
             </div>
@@ -30,10 +31,11 @@
             </div>
 
             <div class="register">
-                <span>Don't have acount? <a href="registro.HTML">Register</a></span>
+                <span>Don't have acount? <a href="/registro">Register</a></span>
             </div>
             </div>
         </div>
     </div>
+    </form action="/login" method="POST">
 </body>
 </html>

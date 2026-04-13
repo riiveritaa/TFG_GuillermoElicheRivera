@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Configuración conexión MySQL
 
@@ -13,53 +14,74 @@ app.config['MYSQL_DB'] = 'TFG'
 
 mysql = MySQL(app)
 
-#Regsitro
+# Ruta para la página de login
+@app.route('/')
+def index():
+    return render_template('login.html')
 
-@app.route('/registro', methods=['POST'])
-def registro():
+# Ruta para la página de registro
 
-    data = request.json
-
-    nombre = data['nombre']
-    email = data['email']
-    password = data['password']
-
-# Generar hash
-
-    password_hash = generate_password_hash(password)
-
-    cur = mysql.connection.cursor()
-
-    cur.execute(
-        "INSERT INTO usuarios (nombreUsuario, email, password) VALUES (%s, %s, %s)",
-        (nombre, email, password_hash)
-    )
-
-    mysql.connection.commit()
-    cur.close()
-
-    return jsonify({"mensaje": "Usuario registrado correctamente"})
+@app.route('/registro', methods=['GET'])
+def pagina_registro():
+    return render_template('registro.html')
 
 #Login
 
 @app.route('/login', methods=['POST'])
 def login():
 
-    data = request.json
-    email = data['email']
-    password = data['password']
+# 1. Recogemos los datos que vienen del HTML
+    email = request.form.get('email_form')
+    password = request.form.get('pass_form')
+
+#si vienen vacios evitamos que se rompa
+    if not email or not password:
+        return jsonify({"mensaje": "Por favor, completa todos los campos"}), 400
 
     cur = mysql.connection.cursor()
+
+# 2. Buscamos el usuario en la base de datos por su email
     cur.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
     usuario = cur.fetchone()
     cur.close()
 
-    print(usuario)
+#3 verificamos si el usuario existe y si la contraseña es correcta
     if usuario and check_password_hash(usuario[3], password):
-        return jsonify({"mensaje": "Login correcto"})
+        return jsonify({"mensaje": "Login exitoso", "usuario_id": usuario[0]})
     else:
-        return jsonify({"mensaje": "Credenciales incorrectas"}), 401
+        return jsonify({"mensaje": "Email o contraseña incorrectos"}), 401
 
+#Regsitro
+
+@app.route('/registro', methods=['POST'])
+def registro():
+
+# 1. Recogemos los datos que vienen del HTML
+
+    nombre = request.form.get('usuario_form')
+    email = request.form.get('email_form')
+    password = request.form.get('pass_form')
+
+    if not nombre or not email or not password:
+        return jsonify({"mensaje": "Faltan campos obligatorios"}), 400
+
+    # Generar hash
+
+    password_hash = generate_password_hash(password)
+
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "INSERT INTO usuarios (nombreUsuario, email, password) VALUES (%s, %s, %s)",
+            (nombre, email, password_hash)
+        )
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"mensaje": "Usuario registrado correctamente"})
+
+    except Exception as e:
+        return jsonify({"mensaje": "Error al registrar usuario", "error": str(e)}), 500 
+    
 #Crear movimiento 
 
 @app.route('/movimiento', methods=['POST'])

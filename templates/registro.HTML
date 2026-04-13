@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=+, initial-scale=1.0">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../CSS/registro.CSS">
+    <link rel="stylesheet" href="../static/CSS/registro.CSS">
     <title>Kaptal-Register</title>
 </head>
 <body>
+    <form action="/registro" method="POST">
     <div class="wrapper">
         <div class="register-box">
             <div class="register-header">
@@ -15,23 +16,23 @@
             </div>
 
             <div class="subtitle-header">
-                Organiza tus finanzas y analiza tu patrimonio en un solo lugar.
+                Organize your finances and analyze your assets in one place.
             </div>
 
             <div class="input-box">
-                <input type="text" id="user" class="input-field" required>
+                <input type="text" name="usuario_form" id="user" class="input-field" minlength="3" maxlength="190" required>
                 <label for="user" class="label">User name</label>
                 <i class="bx bx-user icon"></i>
             </div>
 
             <div class="input-box">
-                <input type="email" id="email" class="input-field" required>
+                <input type="email" name="email_form" id="email" class="input-field" required>
                 <label for="email" class="label">Email</label>
                 <i class="bx bx-envelope-open icon"></i>
             </div>
 
             <div class="input-box">
-                <input type="password" id="pass" class="input-field" required>
+                <input type="password" name="pass_form" id="pass" class="input-field" minlength="6" required>
                 <label for="pass" class="label">Password</label>
                 <i class="bx bx-lock-alt icon"></i>  
             </div>
@@ -43,6 +44,7 @@
             </div>
         </div>
     </div>
-    <script src="../js/registro.js"></script>
+    </form action="/registro" method="POST">
+    <script src="../static/js/registro.js"></script>
 </body>
 </html>
