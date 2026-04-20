@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -46,8 +46,12 @@ def login():
     cur.close()
 
 #3 verificamos si el usuario existe y si la contraseña es correcta
+
+    print(f"Usuario encontrado: {usuario}") # Esto saldrá en la terminal de VS Code
+
     if usuario and check_password_hash(usuario[3], password):
-        return jsonify({"mensaje": "Login exitoso", "usuario_id": usuario[0]})
+        print(f"Hash en DB: {usuario[3]}") # Verifica si el hash parece cortado
+        return redirect(url_for('dashboard'))
     else:
         return jsonify({"mensaje": "Email o contraseña incorrectos"}), 401
 
@@ -82,8 +86,12 @@ def registro():
     except Exception as e:
         return jsonify({"mensaje": "Error al registrar usuario", "error": str(e)}), 500 
     
-#Crear movimiento 
+# Ruta para la página de dashboard
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
+# Crear movimiento
 @app.route('/movimiento', methods=['POST'])
 def movimiento():
 

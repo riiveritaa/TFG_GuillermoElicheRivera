@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaptal - Dashboard </title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="card sidebar">
+            <div class="logo"></div>
+            <ul class="menu">
+                <li><i class='bx bxs-dashboard'></i> </li>
+                <li><i class='bx bx-transfer'></i> </li>
+                <li><i class='bx bx-trending-up'></i> </li>
+                <li><i class='bx bx-wallet'></i> </li>
+            </ul>
+        </nav>
+    <!-- contenido principal -->
+    <main class="main-content">
+        <!-- mitad superios del main -->
+        <section class="top-section">
+            <!-- grafico de la rentabilidad de inversiones -->
+            <div class="card chart-invest">
+                <h3>Grafico de rentabilidad de inversiones</h3>
+                <div class="chart-placeholder">Gráfico de Líneas Aquí</div>
+            </div>
+            <!-- botones de las carteras -->
+            <div class="wallets-buttons">
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet">Cartera 1</button>
+                <button class="btn-wallet">Cartera 2</button>
+                <button class="btn-wallet btn-total">Total</button>
+            </div>
+        </section>
+        <!-- mitad inferior del main -->
+        <section class="bottom-section">
+            <!--botones nuevo ingreso y gasto-->
+            <div class="transaction-buttons">
+                <button class="btn-transaction-ingreso"> <i class='bx bx-plus'></i>  Nuevo Ingreso</button>
+                <button class="btn-transaction-gasto"> <i class='bx bx-minus'></i>  Nuevo Gasto</button>
+            </div>
+            <!--grafico ingresos, gastos y distribucion mensual-->
+            <div  class=" card chart-distribution">
+                <h3>Grafico de ingresos, gastos y distribucion mensual</h3>
+                <div class="chart-placeholder">Gráfico de Barras Aquí</div>
+            </div>
+            <!--grafico ubicacion del capital-->
+            <div class=" card chart-location">
+                <h3>Grafico de ubicacion del capital</h3>
+                <div class="chart-placeholder">Gráfico de Rosca Aquí</div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
