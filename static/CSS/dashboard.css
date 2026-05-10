@@ -1,18 +1,18 @@
 :root {
-    --primary-color: #ECF0F1;    /* Blanco Roto (Texto y detalles) */
-    --second-color: #95A5A6;     /* Gris Suave (Secundarios) */
-    --third-color: #0B121E;      /* Azul Petróleo (Fondo) */
-    --accent-color: #2ECC71;     /* Verde Esmeralda (boton de ingreso) */
-    --red-color: #E74C3C;        /* Rojo Vibrante (boton de gasto) */
+    --primary-color: #ECF0F1;    /* Blanco Roto */
+    --second-color: #95A5A6;     /* Gris Suave */
+    --third-color: #0B121E;      /* Azul Petróleo */
+    --accent-color: #2ECC71;     /* Verde Esmeralda */
+    --red-color: #E74C3C;        /* Rojo Vibrante */
     --card-bg: #1A222F;    
-    font-family: "Poppins", sans-serif;     /* Azul Slate (fondo de las cajas) */
+    font-family: "Poppins", sans-serif;
 }
 
 body{
     margin: 0;
     padding: 0;
     background-color: var(--third-color);
-    overflow: hidden; /* Evita que la página entera haga scroll */
+    overflow: hidden; 
 }
 
 .dashboard-container {
@@ -54,7 +54,6 @@ body{
     display: flex;
     flex-direction: column;
     padding: 20px;
-    overflow-y: auto;
     gap: 20px;
     overflow-y: auto;
 }
@@ -78,7 +77,6 @@ body{
     border: 1px solid rgba(236, 240, 241, 0.1);
     border-radius: 15px;
     padding: 20px;
-    margin: 0px;
     color: var(--primary-color);
     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
 }
@@ -108,6 +106,16 @@ button:hover {
 .btn-transaction-gasto:hover {
     background-color: var(--red-color);
     box-shadow: 0px 10px 25px rgba(231, 76, 60, 0.5);
+}
+
+/* El botón de configuración ahora usa la base de 'button' y solo le damos font-weight */
+.btn-config {
+    font-weight: bold;
+}
+
+.btn-config:hover {
+    background-color: var(--second-color);
+    color: var(--third-color);
 }
 
 .wallets-buttons, .transaction-buttons{
@@ -158,3 +166,96 @@ button:hover {
     scrollbar-width: thin;
     scrollbar-color: rgba(149, 165, 166, 0.3) transparent;
 }
+
+/* --- LOGOUT --- */
+.logout-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--red-color);
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+    color: var(--primary-color);
+    text-shadow: 0px 0px 10px rgba(231, 76, 60, 0.5);
+}
+
+/* --- MODAL DESIGN --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(11, 18, 30, 0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--primary-color);
+    border: 1px solid rgba(236, 240, 241, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 380px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.modal-subtitle {
+    text-align: center;
+    color: var(--second-color);
+    font-size: 0.8rem;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: var(--second-color);
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--third-color);
+    border: 1px solid var(--second-color);
+    color: var(--primary-color);
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.btn-guardar {
+    background-color: var(--accent-color);
+    color: var(--third-color);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.btn-cancelar {
+    background: transparent;
+    color: var(--second-color);
+    margin-top: 10px;
+}
+
+/* Ocultar flechas de números */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }

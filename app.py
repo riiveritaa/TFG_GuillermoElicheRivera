@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.secret_key = os.urandom(24)
 
 # Configuración conexión MySQL
-
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
@@ -14,62 +15,49 @@ app.config['MYSQL_DB'] = 'TFG'
 
 mysql = MySQL(app)
 
-# Ruta para la página de login
 @app.route('/')
 def index():
+    if 'usuario_id' in session:
+        return redirect(url_for('dashboard'))
     return render_template('login.html')
-
-# Ruta para la página de registro
 
 @app.route('/registro', methods=['GET'])
 def pagina_registro():
     return render_template('registro.html')
 
-#Login
-
 @app.route('/login', methods=['POST'])
 def login():
-
-# 1. Recogemos los datos que vienen del HTML
     email = request.form.get('email_form')
     password = request.form.get('pass_form')
 
-#si vienen vacios evitamos que se rompa
     if not email or not password:
         return jsonify({"mensaje": "Por favor, completa todos los campos"}), 400
 
     cur = mysql.connection.cursor()
-
-# 2. Buscamos el usuario en la base de datos por su email
-    cur.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+    cur.execute("SELECT id, nombreUsuario, email, password FROM usuarios WHERE email = %s", (email,))
     usuario = cur.fetchone()
     cur.close()
 
-#3 verificamos si el usuario existe y si la contraseña es correcta
-
-    print(f"Usuario encontrado: {usuario}") # Esto saldrá en la terminal de VS Code
-
     if usuario and check_password_hash(usuario[3], password):
-        print(f"Hash en DB: {usuario[3]}") # Verifica si el hash parece cortado
+        session['usuario_id'] = usuario[0]
+        # No pasamos el nombre aquí, lo leeremos en la ruta dashboard
         return redirect(url_for('dashboard'))
     else:
         return jsonify({"mensaje": "Email o contraseña incorrectos"}), 401
 
-#Regsitro
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 @app.route('/registro', methods=['POST'])
 def registro():
-
-# 1. Recogemos los datos que vienen del HTML
-
     nombre = request.form.get('usuario_form')
     email = request.form.get('email_form')
     password = request.form.get('pass_form')
 
     if not nombre or not email or not password:
         return jsonify({"mensaje": "Faltan campos obligatorios"}), 400
-
-    # Generar hash
 
     password_hash = generate_password_hash(password)
 
@@ -86,78 +74,67 @@ def registro():
     except Exception as e:
         return jsonify({"mensaje": "Error al registrar usuario", "error": str(e)}), 500 
     
-# Ruta para la página de dashboard
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    if 'usuario_id' not in session:
+        return redirect(url_for('index'))
+    
+    # 1. Obtenemos los datos ACTUALIZADOS del usuario, incluyendo porcentajes
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT nombreUsuario, pct_fijo, pct_ocio, pct_ahorro FROM usuarios WHERE id = %s", (session['usuario_id'],))
+    datos_usuario = cur.fetchone()
+    cur.close()
 
-# Crear movimiento
+    # 2. Se los enviamos al HTML
+    return render_template('dashboard.html', 
+    nombre=datos_usuario[0],
+    pct_fijo=datos_usuario[1],
+    pct_ocio=datos_usuario[2],
+    pct_ahorro=datos_usuario[3])
+
+@app.route('/configurar_porcentajes', methods=['POST'])
+def configurar_porcentajes():
+    if 'usuario_id' not in session:
+        return jsonify({"mensaje": "No autorizado"}), 401
+
+    data = request.json
+    fijo = data.get('pct_fijo')
+    ocio = data.get('pct_ocio')
+    ahorro = data.get('pct_ahorro')
+
+    # Validación en el backend por si acaso intentan hackear el JS
+    if (fijo + ocio + ahorro) != 100:
+        return jsonify({"mensaje": "Los porcentajes deben sumar exactamente 100%"}), 400
+
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "UPDATE usuarios SET pct_fijo = %s, pct_ocio = %s, pct_ahorro = %s WHERE id = %s",
+            (fijo, ocio, ahorro, session['usuario_id'])
+        )
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"mensaje": "Porcentajes actualizados correctamente"})
+    except Exception as e:
+        return jsonify({"mensaje": "Error al actualizar porcentajes", "error": str(e)}), 500
+
 @app.route('/movimiento', methods=['POST'])
-def movimiento():
+def crear_movimiento():
+    if 'usuario_id' not in session:
+        return jsonify({"mensaje": "No autorizado"}), 401
 
     data = request.json
-
-    usuario_id = data['usuario_id']
-    tipo = data['tipo']
-    concepto = data['concepto']
-    cantidad = data['cantidad']
-    fecha = data['fecha']
-
-    cur = mysql.connection.cursor()
-    cur.execute(
-        "INSERT INTO movimientos (usuario_id, tipo, concepto, cantidad, fecha) VALUES (%s, %s, %s, %s, %s)",
-        (usuario_id, tipo, concepto, cantidad, fecha)
-    )
-
-    mysql.connection.commit()
-    cur.close()
-
-    return jsonify({"mensaje": "Movimiento creado"})
-
-#Lista de movimientos
-
-@app.route('/movimientos/<int:usuario_id>', methods=['GET'])
-def obtener_movimientos(usuario_id):
-
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM movimientos WHERE usuario_id = %s", (usuario_id,))
-    movimientos = cur.fetchall()
-    cur.close()
-
-    return jsonify(movimientos)
-
-#Actualizar movimientos 
-
-@app.route('/movimiento/<int:id>', methods=['PUT'])
-def actualizar_movimiento(id):
-
-    data = request.json
-    concepto = data['concepto']
-    cantidad = data['cantidad']
-
-    cur = mysql.connection.cursor()
-    cur.execute(
-        "UPDATE movimientos SET concepto = %s, cantidad = %s WHERE id = %s",
-        (concepto, cantidad, id)
-    )
-    mysql.connection.commit()
-    cur.close()
-
-    return jsonify({"mensaje": "Movimiento actualizado"})
-
-#Borrar movimientos 
-
-@app.route('/movimiento/<int:id>', methods=['DELETE'])
-def eliminar_movimiento(id):
-
-    cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM movimientos WHERE id = %s", (id,))
-    mysql.connection.commit()
-    cur.close()
-
-    return jsonify({"mensaje": "Movimiento eliminado"})
-
-print(app.url_map)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "INSERT INTO movimientos (usuario_id, tipo, concepto, categoria, cantidad, fecha) VALUES (%s, %s, %s, %s, %s, %s)",
+            (session['usuario_id'], data['tipo'], data['concepto'], data['categoria'], data['cantidad'], data['fecha'])
+        )
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"mensaje": "Movimiento creado correctamente"})
+    except Exception as e:
+        return jsonify({"mensaje": "Error al crear movimiento", "error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
