@@ -799,3 +799,5 @@ def get_historico():
 
 if __name__ == '__main__':
     app.run(debug=True)
+#sincronizacion final 
+    

@@ -354,3 +354,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Polling recurrente para sensación de Tiempo Real (15 seg)
     setInterval(updateDashboardChart, 15000);
 });
+/* Sincronizacion final */

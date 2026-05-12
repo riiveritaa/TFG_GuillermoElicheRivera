@@ -250,3 +250,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Y definimos un polling cíclico cada 15 segundos
     setInterval(actualizarPreciosLive, 15000);
 });
+/* Sincronizacion final */

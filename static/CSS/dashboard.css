@@ -320,3 +320,4 @@ canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 10
 .modal-cuenta-nombre { display: block; font-weight: bold; color: #fff; }
 .modal-cuenta-saldo { color: var(--second-color); font-size: 0.85rem; }
 .modal-icon-trash { color: var(--red-color); font-size: 1.5rem; }
+/* sincronizacion final */

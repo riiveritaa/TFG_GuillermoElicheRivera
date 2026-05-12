@@ -38,3 +38,4 @@ document.addEventListener('DOMContentLoaded', () => {
         passField.addEventListener('keyup', () => validarCampo(passField, 6));
     }
 });
+/* Sincronizacion final */
