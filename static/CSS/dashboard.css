@@ -1,261 +1,322 @@
+/* ==========================================================================
+   VARIABLES GLOBALES Y TIPOGRAFÍA
+   ========================================================================== */
 :root {
     --primary-color: #ECF0F1;    /* Blanco Roto */
     --second-color: #95A5A6;     /* Gris Suave */
-    --third-color: #0B121E;      /* Azul Petróleo */
-    --accent-color: #2ECC71;     /* Verde Esmeralda */
-    --red-color: #E74C3C;        /* Rojo Vibrante */
-    --card-bg: #1A222F;    
+    --third-color: #0B121E;      /* Azul Petróleo (Fondo principal) */
+    --accent-color: #2ECC71;     /* Verde Esmeralda (Ganancias/Éxito) */
+    --red-color: #E74C3C;        /* Rojo Vibrante (Pérdidas/Peligro) */
+    --card-bg: #1A222F;          /* Fondo de las tarjetas */
     font-family: "Poppins", sans-serif;
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
     background-color: var(--third-color);
-    overflow: hidden; 
+    overflow: hidden; /* Evita el scroll global, se delega a las secciones */
 }
 
 .dashboard-container {
     display: grid;
     grid-template-columns: 70px 1fr;
     height: 100vh;
+    width: 100vw;
 }
 
-.menu {
-    list-style: none;
-    margin-top: 50px;
-    padding: 0;
+/* ==========================================================================
+   SIDEBAR (Barra de Navegación Lateral)
+   ========================================================================== */
+.sidebar {
+    background-color: var(--card-bg); 
+    border-radius: 0px 25px 25px 0px !important; 
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; 
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    z-index: 10;
+    position: relative;
 }
 
-.menu li {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    border-radius: 12px;
-}
+.logo { display: none; }
 
-.menu li:hover {
-    background: rgba(46, 204, 113, 0.2);
-    color: var(--accent-color);
-    transform: translateX(5px);
+.menu { 
+    list-style: none; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 100%; 
+    gap: 30px;
 }
+.menu li { 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 12px; 
+    transition: all 0.3s ease; 
+}
+.menu li a { 
+    color: var(--second-color); 
+    text-decoration: none; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 100%; 
+    height: 100%; 
+    font-size: 24px; 
+}
+.menu li:hover { background: rgba(46, 204, 113, 0.1); transform: translateX(5px); }
+.menu li:hover a, .menu li a.nav-active { color: var(--accent-color); }
 
+.logout-link { 
+    position: absolute; 
+    bottom: 30px; 
+    display: block;
+    text-align: center;
+    color: var(--red-color); 
+    font-size: 24px; 
+    font-weight: bold;
+    transition: all 0.3s; 
+    text-decoration: none; 
+}
+.logout-link:hover { color: var(--primary-color); text-shadow: 0px 0px 10px rgba(231, 76, 60, 0.5); }
+
+/* ==========================================================================
+   LAYOUT PRINCIPAL Y TARJETAS (CARDS)
+   ========================================================================== */
 .main-content {
     display: flex;
     flex-direction: column;
     padding: 20px;
     gap: 20px;
-    overflow-y: auto;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden; 
 }
 
-.top-section {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-    height: 50vh;
-    gap: 20px;
-}
+.top-section { display: grid; grid-template-columns: 1fr 220px; gap: 20px; flex: 1; min-height: 0; }
+.bottom-section { display: grid; grid-template-columns: 200px 1fr 1fr; gap: 20px; flex: 1; min-height: 0; }
 
-.bottom-section {
-    display: grid;
-    grid-template-columns: 200px 1fr 1fr;
-    height: 50vh;
-    gap: 20px;
-}
-
-.card{
+.card {
     background-color: var(--card-bg);
-    border: 1px solid rgba(236, 240, 241, 0.1);
+    border: 1px solid rgba(236, 240, 241, 0.05);
     border-radius: 15px;
     padding: 20px;
     color: var(--primary-color);
-    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-button {
-    background-color: var(--card-bg);
-    color: var(--primary-color);
-    border: none;
-    border-radius: 15px;
-    margin: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 90%;
-    height: 50px;
-}
-
-button:hover {
-    background-color: var(--second-color);
-    box-shadow: 0px 10px 25px rgba(149, 165, 166, 0.5);
-}
-
-.btn-transaction-ingreso:hover {
-    background-color: var(--accent-color);
-    box-shadow: 0px 10px 25px rgba(46, 204, 113, 0.5);
-}
-
-.btn-transaction-gasto:hover {
-    background-color: var(--red-color);
-    box-shadow: 0px 10px 25px rgba(231, 76, 60, 0.5);
-}
-
-/* El botón de configuración ahora usa la base de 'button' y solo le damos font-weight */
-.btn-config {
-    font-weight: bold;
-}
-
-.btn-config:hover {
-    background-color: var(--second-color);
-    color: var(--third-color);
-}
-
-.wallets-buttons, .transaction-buttons{
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column; 
+    min-height: 0; 
 }
 
-.sidebar{
-    border-radius: 0px 25px 25px 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.card h3 { font-size: 1rem; margin-top: 0; margin-bottom: 15px; font-weight: 500; color: #fff;}
+
+/* ==========================================================================
+   BOTONERAS Y TRANSACCIONES
+   ========================================================================== */
+.transaction-buttons, .wallets-buttons { display: flex; flex-direction: column; gap: 12px; height: 100%; overflow-y: auto; }
+.transaction-buttons { justify-content: center; }
+
+.transaction-buttons button, .btn-wallet {
+    width: 100%; min-height: 50px; background-color: rgba(255,255,255,0.03); color: var(--primary-color);
+    border: 1px solid transparent; border-radius: 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; font-weight: 500;
 }
 
-/* scroll para las carteras */
-.wallets-buttons {
-    max-height: 100%;
-    overflow-y: auto;
-}
+.btn-transaction-ingreso:hover { background-color: var(--accent-color); color: var(--third-color); }
+.btn-transaction-gasto:hover { background-color: var(--red-color); color: var(--third-color); }
+.btn-config:hover { background-color: var(--second-color); color: var(--third-color); }
 
-/*ancho de los botones de las carteras*/
-.btn-wallet {
-    padding: 10px;
-}
+.wallets-buttons { justify-content: flex-start; padding-right: 5px;}
+.btn-wallet.btn-active { border: 1px solid var(--accent-color); background: rgba(46, 204, 113, 0.1); color: var(--accent-color); }
+.btn-wallet:hover { border: 1px solid var(--second-color); }
 
-/* Estilo para navegadores Chrome/Edge/Safari */
-::-webkit-scrollbar {
-    width: 6px; 
-}
+.btn-total-border { margin-top: auto; border: 1px dashed var(--second-color); color: var(--second-color); } 
+.btn-total-border.btn-active { border: 1px solid #fff !important; color: #fff !important; background: rgba(255,255,255,0.1) !important; }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
+/* ==========================================================================
+   ESTILO BROKER PARA GRÁFICO PRINCIPAL
+   ========================================================================== */
+.broker-chart-header { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; z-index: 2; position: relative;}
+.broker-label { font-size: 0.75rem; font-weight: 600; color: var(--second-color); text-transform: uppercase; letter-spacing: 0.5px;}
+.broker-big-value { font-size: 2.8rem; margin: 0; color: #fff; line-height: 1.1; font-weight: 600;}
 
-::-webkit-scrollbar-thumb {
-    background: rgba(149, 165, 166, 0.3); 
-    border-radius: 10px;
-}
+.broker-metrics-row { display: flex; gap: 30px; margin-top: 5px; }
+.broker-metric-col { display: flex; flex-direction: column; gap: 2px; }
+.broker-value-change { font-size: 1.1rem; font-weight: bold; }
+.text-profit { color: var(--accent-color); }
+.text-loss { color: var(--red-color); }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--second-color);
+.broker-deposits-badge { 
+    background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; 
+    font-size: 0.75rem; font-weight: 600; color: var(--second-color); 
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; width: fit-content;
 }
+.broker-deposits-badge .dot { width: 8px; height: 8px; background-color: var(--second-color); border-radius: 50%; }
 
-/* Para Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(149, 165, 166, 0.3) transparent;
+.time-filters { display: flex; justify-content: center; gap: 5px; margin-top: 10px; flex-shrink: 0; z-index: 2; position: relative;}
+.btn-time { 
+    background: transparent; border: none; color: var(--second-color); 
+    padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; 
+    cursor: pointer; transition: 0.2s; margin: 0; height: auto; width: auto;
 }
+.btn-time:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.btn-time.active { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* --- LOGOUT --- */
-.logout-link {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: var(--red-color);
-    text-decoration: none;
-    font-size: 24px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+.chart-wrapper { position: relative; flex: 1; width: 100%; min-height: 0; min-width: 0; z-index: 1;}
+canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
+
+.header-with-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.header-with-action h3 { margin: 0; }
+.header-btns { display: flex; gap: 5px; }
+.btn-icon { background: none; border: none; color: var(--accent-color); font-size: 1.3rem; cursor: pointer; padding: 0; transition: 0.2s; width: auto; height: auto; margin: 0;}
+.btn-icon:hover { color: #fff; }
+
+/* ==========================================================================
+   MOVIMIENTOS Y GESTIÓN DE CARTERAS
+   ========================================================================== */
+.content-header { margin-bottom: 20px; text-align: center; }
+.content-header h2 { font-size: 1.8rem; margin: 0; color: #fff; }
+.subtitle { color: var(--second-color); font-size: 0.9rem; margin-top: 5px; text-align: center;}
+.subtitle-left { text-align: left; }
+
+.history-feed, .carteras-feed { 
+    display: flex; flex-direction: column; gap: 15px; 
+    overflow-y: auto; flex: 1; min-height: 0; padding-right: 10px;
+    max-width: 900px; margin: 0 auto; width: 100%;
 }
+.carteras-feed { max-width: 1000px; }
 
-.logout-link:hover {
-    color: var(--primary-color);
-    text-shadow: 0px 0px 10px rgba(231, 76, 60, 0.5);
+.cartera-header {
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; margin-bottom: 10px;
+    max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;
 }
+.cartera-header-info h2 { margin: 0; font-size: 1.8rem; color: #fff; text-align: left;}
+.cartera-header-info .subtitle { margin: 5px 0 0 0; color: var(--second-color); font-size: 0.9rem; text-align: left;}
 
-/* --- MODAL DESIGN --- */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(11, 18, 30, 0.85);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-}
+.cartera-header-actions { display: flex; flex-direction: row; gap: 10px; }
+.btn-header-action { width: auto; min-height: 40px; height: 40px; padding: 0 15px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer; transition: 0.3s; margin:0;}
+.btn-fondear { border: 1px solid #E67E22; color: #E67E22; background: transparent; }
+.btn-fondear:hover { background: rgba(230, 126, 34, 0.1); }
+.btn-nueva { border: 1px solid var(--second-color); color: var(--second-color); background: transparent; }
+.btn-nueva:hover { background: rgba(255,255,255,0.05); color: #fff; border-color: #fff; }
+.btn-comprar { background: #3498DB; color: #fff; border: none; }
+.btn-comprar:hover { opacity: 0.9; }
 
-.modal-content {
-    background-color: var(--card-bg);
-    color: var(--primary-color);
-    border: 1px solid rgba(236, 240, 241, 0.1);
-    padding: 30px;
-    width: 90%;
-    max-width: 380px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-}
+/* Tarjetas de Listado */
+.history-item { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; flex-shrink:0;}
+.cartera-item-card { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 25px; height: auto !important;}
+.cartera-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-.modal-subtitle {
-    text-align: center;
+.item-left { display: flex; align-items: center; gap: 15px; }
+.icon-circle { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
+.bg-green { background: rgba(46, 204, 113, 0.1); color: var(--accent-color); }
+.bg-red { background: rgba(231, 76, 60, 0.1); color: var(--red-color); }
+.bg-blue-light { background: rgba(52, 152, 219, 0.1); color: #3498DB; }
+
+.item-details { display: flex; flex-direction: column; }
+.item-concept { font-weight: 600; color: #fff; }
+.item-category { font-size: 0.8rem; color: var(--second-color); }
+.item-actions { display: flex; align-items: center; gap: 20px; }
+.item-amount { font-weight: bold; font-size: 1.1rem; width: 100px; text-align: right; }
+.amount-positive { color: var(--accent-color); }
+.amount-negative { color: var(--red-color); }
+
+.btn-action { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--second-color); transition: color 0.2s; width: auto; height: auto; padding: 0; margin:0;}
+.btn-action.edit:hover { color: #3498DB; }
+.btn-action.delete:hover { color: var(--red-color); }
+
+/* Elementos internos de las Carteras (Posiciones) */
+.posiciones-sueltas-scroll { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+.posiciones-list { display: flex; flex-direction: column; gap: 12px; }
+.posicion-item { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(0,0,0,0.25); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); }
+
+.pos-col-main { flex: 2; display: flex; flex-direction: column; gap: 4px; }
+.pos-ticker-row { display: flex; align-items: center; gap: 8px; }
+.posicion-ticker { font-weight: bold; color: #fff; font-size: 1.05rem; }
+.peso-badge { background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; color: var(--second-color); cursor: pointer; transition: 0.2s; }
+.peso-badge:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.posicion-subtext { font-size: 0.85rem; color: var(--second-color); }
+
+.pos-col-qty { flex: 1.5; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pos-qty-text { font-size: 0.95rem; color: #fff; font-weight: 500;}
+
+.pos-col-value { flex: 1.5; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.pos-actions { display: flex; align-items: center; justify-content: flex-end; margin-left: 20px; }
+.icon-venta { color: #E67E22; font-size: 1.4rem; transition: 0.2s;}
+.icon-venta:hover { color: #D35400; transform: scale(1.1);}
+
+.liq-text { margin-right: 15px; color: var(--second-color); font-size: 0.9rem; }
+.text-blue-bold { font-weight: bold; color: #3498DB; font-size: 1.05rem;}
+.text-accent-bold { font-weight: bold; color: var(--accent-color); font-size: 1.05rem;}
+
+.clickable-header { cursor: pointer; transition: opacity 0.2s; }
+.clickable-header:hover { opacity: 0.8; }
+.toggle-icon { display: inline-block; transition: transform 0.3s ease; margin-left: 10px; vertical-align: middle; color: var(--second-color); font-size: 1.2rem;}
+.toggle-icon.rotated { transform: rotate(180deg); }
+.posiciones-list.collapsed { display: none !important; }
+
+/* ==========================================================================
+   UTILIDADES (Clases para limpiar HTML de estilos inline)
+   ========================================================================== */
+.flex-row-gap { display: flex; gap: 10px; }
+.flex-1 { flex: 1; }
+.text-center-title { text-align: center; margin-top: 0; }
+.btn-orange { background-color: #E67E22 !important; color: #fff !important; }
+.btn-blue { background-color: #3498DB !important; color: #fff !important; }
+.btn-red { background-color: #E74C3C !important; color: #fff !important; }
+.text-orange { color: #E67E22 !important; }
+.text-blue { color: #3498DB !important; }
+.text-red { color: #E74C3C !important; }
+
+/* Nuevas clases extraídas del HTML */
+.divisa-warning {
+    font-size: 0.75rem;
     color: var(--second-color);
-    font-size: 0.8rem;
-    margin-top: -15px;
-    margin-bottom: 20px;
+    margin-top: 5px;
 }
-
-.form-group {
-    margin-bottom: 15px;
+.divisa-warning-dash {
+    font-size: 0.75rem;
+    color: var(--second-color);
+    margin-top: 2px;
 }
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.85rem;
+.empty-state-text {
+    text-align: center; 
     color: var(--second-color);
 }
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 10px;
-    background-color: var(--third-color);
-    border: 1px solid var(--second-color);
-    color: var(--primary-color);
-    border-radius: 10px;
-    outline: none;
-    box-sizing: border-box;
+#grupoCategoria {
+    display: none; /* Oculto por defecto, modificado vía JS */
 }
 
-.btn-guardar {
-    background-color: var(--accent-color);
-    color: var(--third-color);
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: bold;
-    width: 100%;
-}
+/* ==========================================================================
+   SCROLL BAR Y MODALES GLOBALES
+   ========================================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(149, 165, 166, 0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--second-color); }
+* { scrollbar-width: thin; scrollbar-color: rgba(149, 165, 166, 0.3) transparent; }
 
-.btn-cancelar {
-    background: transparent;
-    color: var(--second-color);
-    margin-top: 10px;
-}
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 18, 30, 0.85); z-index: 9999; justify-content: center; align-items: center; }
+.modal-content { background-color: var(--card-bg); color: var(--primary-color); border: 1px solid rgba(236, 240, 241, 0.05); padding: 30px; width: 90%; max-width: 400px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+.modal-content h3 { margin-top: 0; margin-bottom: 20px; text-align: center; color: #fff;}
+.modal-title-accent { color: var(--accent-color) !important; }
 
-/* Ocultar flechas de números */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type="number"] { -moz-appearance: textfield; }
+.modal-subtitle { text-align: center; color: var(--second-color); font-size: 0.85rem; margin-top: -15px; margin-bottom: 20px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: var(--second-color); }
+.form-group input, .form-group select { width: 100%; padding: 12px; background-color: var(--third-color); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 10px; outline: none; box-sizing: border-box; }
+.input-uppercase { text-transform: uppercase; }
+
+.modal-actions-equal { display: flex; gap: 10px; margin-top: 20px; width: 100%;}
+.btn-guardar { flex: 1; background-color: var(--accent-color); color: var(--third-color); padding: 12px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s;}
+.btn-guardar:hover { opacity: 0.9; }
+.btn-cancelar { flex: 1; background: transparent; color: var(--second-color); border: 1px solid var(--second-color); padding: 12px; border-radius: 10px; cursor: pointer; transition: 0.2s;}
+.btn-cancelar:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+.modal-cuenta-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+.modal-cuenta-nombre { display: block; font-weight: bold; color: #fff; }
+.modal-cuenta-saldo { color: var(--second-color); font-size: 0.85rem; }
+.modal-icon-trash { color: var(--red-color); font-size: 1.5rem; }

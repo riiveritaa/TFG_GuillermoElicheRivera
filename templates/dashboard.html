@@ -4,61 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaptal-Dashboard</title>
-    
-    <link rel="stylesheet" href="../static/CSS/dashboard.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <div class="dashboard-container">
-        <nav class="card sidebar">
+        <nav class="sidebar">
             <div class="logo"></div>
-
             <ul class="menu">
-                <li><i class='bx bxs-dashboard'></i></li>
-                <li><i class='bx bx-transfer'></i></li>
-                <li><i class='bx bx-trending-up'></i></li>
-                <li><i class='bx bx-wallet'></i></li>
+                <li><a href="{{ url_for('dashboard') }}" class="nav-active" title="Inicio"><i class='bx bxs-dashboard'></i></a></li>
+                <li><a href="{{ url_for('mis_movimientos') }}" title="Movimientos"><i class='bx bx-transfer'></i></a></li>
+                <li><a href="{{ url_for('mis_carteras') }}" title="Gestión de Carteras"><i class='bx bx-wallet'></i></a></li>
             </ul>
-
-            <a href="/logout" class="logout-link" title="Cerrar sesión">
-                <i class='bx bx-log-out'></i>
-            </a>
+            <a href="/logout" class="logout-link" title="Cerrar sesión"><i class='bx bx-log-out'></i></a>
         </nav>
 
         <main class="main-content">
             <section class="top-section">
                 <div class="card chart-invest">
-                    <h3>Grafico de rentabilidad de inversiones</h3>
-                    <div class="chart-placeholder">Gráfico de Líneas Aquí</div>
+                    <div class="broker-chart-header">
+                        <span class="broker-label" id="chartEntityLabel">VALOR DE LA CUENTA</span>
+                        <h2 class="broker-big-value" id="mainValueDisplay">0.00 €</h2>
+                        
+                        <div class="divisa-warning-dash">
+                            <i class='bx bx-info-circle'></i> El cambio de divisa es una estimación y puede variar ligeramente respecto a su broker.
+                        </div>
+                        
+                        <div class="broker-metrics-row">
+                            <div class="broker-metric-col">
+                                <span class="broker-label" id="periodLabel">ÚLTIMAS 24 HORAS</span>
+                                <div class="broker-value-change" id="periodChangeDisplay">0.00 €</div>
+                            </div>
+                            <div class="broker-metric-col">
+                                <span class="broker-label">TASA DE RENDIMIENTO</span>
+                                <div class="broker-value-change" id="mainYieldDisplay">0.00 %</div>
+                            </div>
+                        </div>
+                        
+                        <div class="broker-deposits-badge">
+                            <span class="dot"></span> <span id="badgeDepositos">{{ "%.2f"|format(depositos_netos) }} € DEPÓSITOS NETOS</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-wrapper">
+                        <canvas id="mainLineChart"></canvas>
+                    </div>
+
+                    <div class="time-filters">
+                        <button class="btn-time active" data-period="1d">1D</button>
+                        <button class="btn-time" data-period="1w">1S</button>
+                        <button class="btn-time" data-period="1mo">1M</button>
+                        <button class="btn-time" data-period="3mo">3M</button>
+                        <button class="btn-time" data-period="ytd">YTD</button>
+                        <button class="btn-time" data-period="1y">1A</button>
+                        <button class="btn-time" data-period="max">MAX</button>
+                    </div>
                 </div>
                 
                 <div class="wallets-buttons">
-                    <button class="btn-wallet">Cartera 1</button>
-                    <button class="btn-wallet btn-total">Total</button>
+                    <button class="btn-wallet btn-total-border btn-active" data-type="total">Total Inversiones</button>
+                    {% if mis_carteras %}
+                        {% for c in mis_carteras %}
+                            <button class="btn-wallet" data-type="cartera" data-id="{{ c.id }}"><i class='bx bx-briefcase'></i> {{ c.nombre }}</button>
+                        {% endfor %}
+                    {% endif %}
+                    {% if mis_sueltas %}
+                        {% for s in mis_sueltas %}
+                            <button class="btn-wallet" data-type="posicion" data-id="{{ s.ticker }}"><i class='bx bx-layer'></i> {{ s.ticker }}</button>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </section>
 
             <section class="bottom-section">
                 <div class="transaction-buttons">
-                    <button class="btn-transaction-ingreso" id="btnIngreso"> 
-                        <i class='bx bx-plus'></i> Nuevo Ingreso
-                    </button>
-                    <button class="btn-transaction-gasto" id="btnGasto"> 
-                        <i class='bx bx-minus'></i> Nuevo Gasto
-                    </button>
-                    <button class="btn-config" id="btnConfig"> 
-                        <i class='bx bx-cog'></i> Ajustar Porcentajes
-                    </button>
+                    <button class="btn-transaction-ingreso" id="btnIngreso"><i class='bx bx-plus'></i> Nuevo Ingreso</button>
+                    <button class="btn-transaction-gasto" id="btnGasto"><i class='bx bx-minus'></i> Nuevo Gasto</button>
+                    <button class="btn-config" id="btnConfig"><i class='bx bx-cog'></i> Ajustar Presupuesto</button>
                 </div>
 
                 <div class="card chart-distribution">
-                    <h3>Grafico de ingresos, gastos y distribucion mensual</h3>
-                    <div class="chart-placeholder">Gráfico de Barras Aquí</div>
+                    <h3>Presupuesto vs Gastado Mensual</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoDistribucion" data-pfijo="{{ presupuesto_fijo }}" data-pocio="{{ presupuesto_ocio }}" data-pahorro="{{ presupuesto_ahorro }}" data-gfijo="{{ gastado_fijo }}" data-gocio="{{ gastado_ocio }}" data-gahorro="{{ gastado_ahorro }}"></canvas>
+                    </div>
                 </div>
 
                 <div class="card chart-location">
-                    <h3>Grafico de ubicacion del capital</h3>
-                    <div class="chart-placeholder">Gráfico de Rosca Aquí</div>
+                    <div class="header-with-action">
+                        <h3>Distribución de Capital</h3>
+                        <div class="header-btns">
+                            <button id="btnAñadirCuenta" class="btn-icon"><i class='bx bx-plus-circle'></i></button>
+                            <button id="btnGestionCuentas" class="btn-icon"><i class='bx bx-slider-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoRosca" data-nombres="{{ nombres_cuentas | tojson | forceescape }}" data-saldos="{{ saldos_cuentas | tojson | forceescape }}" data-colores="{{ colores_cuentas | tojson | forceescape }}"></canvas>
+                    </div>
                 </div>
             </section>
         </main>
@@ -69,19 +113,11 @@
             <h3 id="modalTitulo">Nuevo Ingreso</h3>
             <form id="formMovimiento">
                 <input type="hidden" id="tipo_movimiento" value="ingreso">
-                
-                <div class="form-group">
-                    <label for="concepto">Concepto</label>
-                    <input type="text" id="concepto" required placeholder="Ej: Nómina, Supermercado">
-                </div>
-                
-                <div class="form-group">
-                    <label for="cantidad">Cantidad (€)</label>
-                    <input type="number" id="cantidad" step="0.01" required placeholder="0.00">
-                </div>
+                <div class="form-group"><label>Concepto</label><input type="text" id="concepto" required></div>
+                <div class="form-group"><label>Cantidad (€)</label><input type="number" id="cantidad" step="0.01" required></div>
                 
                 <div class="form-group" id="grupoCategoria">
-                    <label for="categoria">Categoría</label>
+                    <label>Categoría</label>
                     <select id="categoria" name="categoria">
                         <option value="fijo">Gasto Fijo</option>
                         <option value="ocio">Ocio</option>
@@ -90,14 +126,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="fecha">Fecha</label>
-                    <input type="date" id="fecha" name="fecha" required>
+                    <label>Cuenta</label>
+                    <select id="cuenta_id" required>
+                        {% for c in cuentas %}<option value="{{ c.id }}">{{ c.nombre }} ({{ c.saldo }}€)</option>{% endfor %}
+                    </select>
                 </div>
-                
-                <div class="modal-actions">
-                    <button type="submit" class="btn-guardar">Guardar Movimiento</button>
-                    <button type="button" class="btn-cancelar" id="btnCancelarModal">Cancelar</button>
-                </div>
+                <div class="form-group"><label>Fecha</label><input type="date" id="fecha" name="fecha" required></div>
+                <div class="modal-actions-equal"><button type="button" class="btn-cancelar" id="btnCancelarModal">Cancelar</button><button type="submit" class="btn-guardar">Guardar</button></div>
             </form>
         </div>
     </div>
@@ -105,30 +140,42 @@
     <div id="modalConfig" class="modal-overlay">
         <div class="modal-content card">
             <h3>Ajustar Presupuesto</h3>
-            <p class="modal-subtitle">Distribuye el 100% de tus ingresos</p>
-            
             <form id="formConfig">
-                <div class="form-group">
-                    <label for="pct_fijo">Gastos Fijos (%)</label>
-                    <input type="number" id="pct_fijo" min="0" max="100" value="{{ pct_fijo }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="pct_ocio">Ocio (%)</label>
-                    <input type="number" id="pct_ocio" min="0" max="100" value="{{ pct_ocio }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="pct_ahorro">Ahorro / Inversión (%)</label>
-                    <input type="number" id="pct_ahorro" min="0" max="100" value="{{ pct_ahorro }}" required>
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="submit" class="btn-guardar">Guardar Ajustes</button>
-                    <button type="button" class="btn-cancelar" id="btnCancelarConfig">Cancelar</button>
-                </div>
+                <div class="form-group"><label>Gastos Fijos (%)</label><input type="number" id="pct_fijo" min="0" max="100" value="{{ pct_fijo }}" required></div>
+                <div class="form-group"><label>Ocio (%)</label><input type="number" id="pct_ocio" min="0" max="100" value="{{ pct_ocio }}" required></div>
+                <div class="form-group"><label>Ahorro (%)</label><input type="number" id="pct_ahorro" min="0" max="100" value="{{ pct_ahorro }}" required></div>
+                <div class="modal-actions-equal"><button type="button" class="btn-cancelar" id="btnCancelarConfig">Cancelar</button><button type="submit" class="btn-guardar">Guardar</button></div>
             </form>
         </div>
     </div>
 
-    <script src="../static/js/dashboard.js"></script>
+    <div id="modalCuenta" class="modal-overlay">
+        <div class="modal-content card">
+            <h3 class="modal-title-accent text-center-title">Añadir Cuenta</h3>
+            <form id="formCuenta">
+                <div class="form-group"><label>Nombre</label><input type="text" id="nombre_cuenta" required></div>
+                <div class="form-group"><label>Tipo de cuenta</label><select id="tipo_cuenta" required><option value="banco">Banco</option><option value="efectivo">Efectivo</option></select></div>
+                <div class="form-group"><label>Saldo Actual (€)</label><input type="number" id="saldo_inicial" step="0.01" value="0.00" required></div>
+                <div class="modal-actions-equal"><button type="button" class="btn-cancelar" onclick="document.getElementById('modalCuenta').style.display='none'">Cancelar</button><button type="submit" class="btn-guardar">Crear</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalGestionCuentas" class="modal-overlay">
+        <div class="modal-content card">
+            <h3>Gestionar Cuentas</h3>
+            <div class="cuentas-list">
+                {% for c in cuentas %}
+                <div class="cuenta-item">
+                    <div><span class="modal-cuenta-nombre">{{ c.nombre }}</span><span class="modal-cuenta-saldo">{{ c.saldo }} €</span></div>
+                    <button type="button" class="btn-action delete btn-icon modal-icon-trash" data-id="{{ c.id }}"><i class='bx bx-trash'></i></button>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-actions-equal"><button type="button" class="btn-cancelar" style="width: 100%;" onclick="document.getElementById('modalGestionCuentas').style.display='none'">Cerrar</button></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>

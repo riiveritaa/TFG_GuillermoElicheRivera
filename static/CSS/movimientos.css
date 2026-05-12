@@ -1,0 +1,114 @@
+/* ======================================================== */
+/* --- ESTILOS DEL HISTORIAL DE MOVIMIENTOS --- */
+/* ======================================================== */
+
+.content-header {
+    margin-bottom: 30px;
+}
+
+.content-header h2 {
+    color: #FFFFFF; /* O usa var(--primary-color) si tu variable blanca se llama así */
+}
+
+.subtitle {
+    color: var(--second-color);
+    font-size: 0.9rem;
+}
+
+.history-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    transition: transform 0.2s ease;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    border-color: var(--second-color);
+}
+
+.item-left, .item-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.bg-green { background: rgba(46, 204, 113, 0.1); color: var(--accent-color); }
+.bg-red { background: rgba(231, 76, 60, 0.1); color: var(--red-color); }
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-concept {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.item-info {
+    font-size: 0.85rem;
+    color: var(--second-color);
+}
+
+.item-amount {
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: right;
+}
+
+.text-green { color: var(--accent-color); }
+.text-red { color: var(--red-color); }
+
+.item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--second-color);
+    cursor: pointer;
+    transition: color 0.3s;
+    width: auto; 
+    height: auto;
+    box-shadow: none;
+}
+
+.btn-action.edit:hover { color: #3498DB; transform: scale(1.1); }
+.btn-action.delete:hover { color: var(--red-color); transform: scale(1.1); }
+
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    color: var(--second-color);
+}
+
+.empty-state i { 
+    font-size: 4rem; 
+    margin-bottom: 10px; 
+}
