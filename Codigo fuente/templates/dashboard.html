@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaptal - Panel Principal</title>
+    <link rel="stylesheet" href="/static/CSS/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="logo"></div>
+            <ul class="menu">
+                <li><a href="/dashboard" class="nav-active" title="Panel Principal"><i class='bx bxs-dashboard'></i></a></li>
+            </ul>
+            <a href="/logout" class="logout-link" title="Cerrar sesión"><i class='bx bx-log-out'></i></a>
+        </nav>
+
+        <main class="main-content">
+            <section class="top-section">
+                <div class="transaction-buttons">
+                    <h3 id="saludo_usuario"></h3>
+                    <button class="btn-transaction-ingreso" id="btnIngreso"><i class='bx bx-plus'></i> Nuevo Ingreso</button>
+                    <button class="btn-transaction-gasto" id="btnGasto"><i class='bx bx-minus'></i> Nuevo Gasto</button>
+                    <button class="btn-config" id="btnAñadirCuenta"><i class='bx bx-plus-circle'></i> Nueva Cuenta</button>
+                    <button class="btn-config" id="btnConfig"><i class='bx bx-cog'></i> Ajustar Presupuesto</button>
+                </div>
+
+                <div class="card chart-distribution">
+                    <h3>Presupuestado vs Gastado Mensual</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoDistribucion"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-location">
+                    <div class="header-with-action">
+                        <h3>Cuentas y Capital</h3>
+                        <div class="header-btns">
+                            <button id="btnGestionCuentas" class="btn-icon"><i class='bx bx-slider-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoRosca"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bottom-section">
+                <div class="card full-width-card">
+                    <div class="header-with-action">
+                        <h3 id="titulo_historial">Historial de Movimientos</h3>
+                    </div>
+                    <div class="history-feed" id="contenedor_movimientos">
+                        <p class="empty-state-text">Cargando datos...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modalMovimiento" class="modal-overlay">
+        <div class="modal-content card">
+            <h3 id="modalTitulo">Nuevo Movimiento</h3>
+            <form id="formMovimiento">
+                <input type="hidden" id="tipo_movimiento" value="ingreso">
+                <div class="form-group"><label>Concepto</label><input type="text" id="concepto" required></div>
+                <div class="form-group"><label>Cantidad (€)</label><input type="number" id="cantidad" step="0.01" min="0.01" required></div>
+                
+                <div class="form-group" id="grupoCategoria">
+                    <label>Categoría</label>
+                    <select id="categoria">
+                        <option value="fijo">Gasto Fijo</option>
+                        <option value="ocio">Ocio</option>
+                        <option value="ahorro_inversion">Ahorro / Inversión</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Cuenta de origen/destino</label>
+                    <select id="cuenta_id" required></select>
+                </div>
+                <div class="form-group"><label>Fecha</label><input type="date" id="fecha" required></div>
+                <div class="modal-actions-equal">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEditarMovimiento" class="modal-overlay">
+        <div class="modal-content card">
+            <h3>Editar Movimiento</h3>
+            <form id="formEditarMovimiento">
+                <input type="hidden" id="edit_movimiento_id">
+                <input type="hidden" id="edit_tipo_movimiento">
+                
+                <div class="form-group"><label>Concepto</label><input type="text" id="edit_concepto" required></div>
+                <div class="form-group"><label>Cantidad (€)</label><input type="number" id="edit_cantidad" step="0.01" min="0.01" required></div>
+                
+                <div class="form-group" id="edit_grupoCategoria">
+                    <label>Categoría</label>
+                    <select id="edit_categoria">
+                        <option value="ingreso" class="hidden-option">Ingreso</option>
+                        <option value="fijo">Gasto Fijo</option>
+                        <option value="ocio">Ocio</option>
+                        <option value="ahorro_inversion">Ahorro / Inversión</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Cuenta de origen/destino</label>
+                    <select id="edit_cuenta_id" required></select>
+                </div>
+                <div class="form-group"><label>Fecha</label><input type="date" id="edit_fecha" required></div>
+                <div class="modal-actions-equal">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalConfig" class="modal-overlay">
+        <div class="modal-content card">
+            <h3>Ajustar Metas (%)</h3>
+            <form id="formConfig">
+                <div class="form-group"><label>Gastos Fijos (%)</label><input type="number" id="pct_fijo" min="0" max="100" required></div>
+                <div class="form-group"><label>Ocio (%)</label><input type="number" id="pct_ocio" min="0" max="100" required></div>
+                <div class="form-group"><label>Ahorro (%)</label><input type="number" id="pct_ahorro" min="0" max="100" required></div>
+                <div class="modal-actions-equal"><button type="button" class="btn-cancelar">Cancelar</button><button type="submit" class="btn-guardar">Guardar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalCuenta" class="modal-overlay">
+        <div class="modal-content card">
+            <h3 class="modal-title-accent text-center-title">Añadir Cuenta</h3>
+            <form id="formCuenta">
+                <div class="form-group"><label>Nombre</label><input type="text" id="nombre_cuenta" required></div>
+                <div class="form-group"><label>Tipo</label><select id="tipo_cuenta" required><option value="banco">Banco</option><option value="efectivo">Efectivo</option></select></div>
+                <div class="form-group"><label>Saldo Inicial (€)</label><input type="number" id="saldo_inicial" step="0.01" value="0.00" required></div>
+                <div class="modal-actions-equal"><button type="button" class="btn-cancelar">Cancelar</button><button type="submit" class="btn-guardar">Crear</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalGestionCuentas" class="modal-overlay">
+        <div class="modal-content card">
+            <h3>Tus Cuentas</h3>
+            <div class="cuentas-list" id="contenedor_gestion_cuentas"></div>
+            <div class="modal-actions-equal"><button type="button" class="btn-cancelar btn-full-width">Cerrar</button></div>
+        </div>
+    </div>
+
+    <div id="modalTransferirSaldo" class="modal-overlay transferir-modal-top">
+        <div class="modal-content card transferir-card">
+            <h3 class="transferir-title"><i class='bx bx-error-alt'></i> Cuenta con Saldo</h3>
+            <p class="transferir-text">
+                La cuenta "<span id="nombre_cuenta_a_borrar" class="transferir-highlight-white"></span>" tiene <span id="saldo_a_transferir" class="transferir-highlight-accent"></span>€. <br>
+                Selecciona a qué cuenta quieres traspasar ese dinero:
+            </p>
+            <form id="formTransferirEliminar">
+                <input type="hidden" id="id_cuenta_borrar_oculto">
+                <div class="form-group">
+                    <label>Cuenta de destino</label>
+                    <select id="cuenta_destino_id" required></select>
+                </div>
+                <div class="modal-actions-equal">
+                    <button type="button" class="btn-cancelar" id="btnCancelarTraspaso">Cancelar</button>
+                    <button type="submit" class="btn-guardar btn-danger">Transferir y Borrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

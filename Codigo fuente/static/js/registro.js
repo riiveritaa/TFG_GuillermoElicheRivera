@@ -1,19 +1,9 @@
-/**
- * Lógica de validación visual de campos en el formulario de Registro.
- * Añade bordes dinámicos (Verde/Rojo) al vuelo según las constraints.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // Selección de elementos del DOM por su ID
     const userField = document.getElementById('user');
     const passField = document.getElementById('pass');
 
-    /**
-     * Aplica estilos de validación al borde del input.
-     * @param {HTMLElement} campo - El elemento input a validar.
-     * @param {number} minimo - La longitud mínima de caracteres permitida.
-     */
     function validarCampo(campo, minimo) {
         if (!campo) return; // Prevención de errores si el elemento no existe
 
@@ -38,4 +28,3 @@ document.addEventListener('DOMContentLoaded', () => {
         passField.addEventListener('keyup', () => validarCampo(passField, 6));
     }
 });
-/* Sincronizacion final */

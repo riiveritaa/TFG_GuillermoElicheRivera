@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/CSS/registro.css">
+    <title>Kaptal - Registro</title>
+</head>
+<body>
+    <form action="/registro" method="POST">
+        <div class="wrapper">
+            <div class="register-box">
+                <div class="register-header"><span>Bienvenido</span></div>
+                <div class="subtitle-header">Organiza tus finanzas en un solo lugar.</div>
+                
+                <div class="input-box">
+                    <input type="text" name="usuario_form" id="user" class="input-field" minlength="3" required>
+                    <label for="user" class="label">Nombre de usuario</label>
+                    <i class="bx bx-user icon"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="email" name="email_form" id="email" class="input-field" required>
+                    <label for="email" class="label">Email</label>
+                    <i class="bx bx-envelope-open icon"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="password" name="pass_form" id="pass" class="input-field" minlength="6" required>
+                    <label for="pass" class="label">Contraseña</label>
+                    <i class="bx bx-lock-alt icon"></i>  
+                </div>
+
+                <div class="input-box">
+                    <input type="submit" class="input-submit" value="Registrarse">
+                </div>
+                
+                <div class="register">
+                    <span>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="/static/js/registro.js"></script>
+</body>
+</html>

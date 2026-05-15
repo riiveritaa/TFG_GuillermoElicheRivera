@@ -1,0 +1,12 @@
+# Videos de demostración
+/Video de demostración/
+/*.mp4
+
+# Configuración local de VSCode
+/Codigo fuente/.vscode/
+
+#Configurado por si acaso se generan -env para la prueba de la aplicación con entornos virtuales
+__pycache__/
+*.pyc
+.venv/
+.env

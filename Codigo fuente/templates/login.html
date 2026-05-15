@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/CSS/login.css">
+    <title>Kaptal - Login</title>
+</head>
+<body>
+    <form action="/login" method="POST">
+        <div class="wrapper">
+            <div class="login-box">
+                <div class="login-header"><span>Login</span></div>
+                <div class="input-box">
+                    <input type="email" name="email_form" id="email" class="input-field" required>
+                    <label for="email" class="label">Email</label>
+                    <i class="bx bx-envelope-open icon"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="pass_form" id="pass" class="input-field" required>
+                    <label for="pass" class="label">Password</label>
+                    <i class="bx bx-lock-alt icon"></i>
+                </div>
+                <div class="input-box">
+                    <input type="submit" class="input-submit" value="Login">
+                </div>
+                <div class="register">
+                    <span>¿No tienes cuenta? <a href="/registro">Regístrate</a></span>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
