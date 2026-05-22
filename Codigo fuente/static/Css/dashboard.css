@@ -149,3 +149,69 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); curso
 .hidden-option {
     display: none;
 }
+
+/* =========================================================
+   MEDIA QUERY PARA MÓVILES (Dashboard)
+   ========================================================= */
+@media (max-width: 768px) {
+    /* 1. Reestructurar el contenedor: Menú abajo, contenido arriba */
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 70px; /* 70px para la barra inferior */
+        height: 100dvh; /* dvh evita que la barra de Safari/Chrome tape el menú */
+    }
+
+    /* 2. Convertir el Sidebar en un "Bottom Navigation" (App nativa) */
+    .sidebar {
+        grid-row: 2;
+        border-radius: 25px 25px 0 0;
+        padding-top: 0;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.3); /* Sombra hacia arriba */
+        width: 100vw;
+    }
+
+    .menu {
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0 10px;
+        gap: 0;
+        margin: 0;
+    }
+
+    /* Ajustar el botón de logout para que encaje en la barra inferior */
+    .logout-link {
+        position: static;
+        margin-right: 15px;
+    }
+
+    /* 3. Panel principal en una sola columna y con scroll */
+    .main-content {
+        padding: 15px;
+        height: 100%;
+        overflow-y: auto; /* Para poder hacer scroll hacia abajo */
+    }
+
+    .top-section {
+        grid-template-columns: 1fr; /* Todo en 1 columna vertical */
+        height: auto; 
+    }
+
+    /* 4. Darle altura fija al gráfico para que no desaparezca al apilarse */
+    .chart-wrapper {
+        min-height: 250px; 
+        margin-top: 15px;
+    }
+
+    /* 5. Ajustar historial para que no estire la pantalla infinitamente */
+    .history-feed {
+        max-height: 350px;
+    }
+    /* Darle altura obligatoria a la sección de abajo para que no se aplaste */
+    .bottom-section {
+        min-height: 400px;
+        flex: none;
+    }
+}

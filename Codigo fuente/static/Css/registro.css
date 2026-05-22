@@ -179,3 +179,26 @@ a:hover {
 }
 /* sincronizacion final */
 
+/* =========================================================
+   MEDIA QUERY PARA MÓVILES (Login y Registro)
+   ========================================================= */
+@media (max-width: 480px) {
+    /* Ajustar la caja principal para que ocupe el 90% de la pantalla */
+    .login-box, .register-box {
+        width: 90%;
+        padding: 5em 1.5em 3em 1.5em; /* Reducimos los márgenes laterales */
+    }
+
+    /* Ajustar el tamaño del encabezado superior flotante */
+    .login-header {
+        width: 120px;
+    }
+    
+    .register-header {
+        width: 180px; 
+    }
+
+    .login-header span, .register-header span {
+        font-size: 20px; /* Texto un poco más pequeño para que quepa */
+    }
+}
