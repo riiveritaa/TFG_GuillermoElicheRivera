@@ -10,3 +10,8 @@ __pycache__/
 *.pyc
 .venv/
 .env
+
+#inivio de .venv
+.\.venv\Scripts\activate
+cd "Codigo fuente" # Cambia al directorio "Codigo fuente"sino no se ejecutará el comando de abajo
+python app.py
