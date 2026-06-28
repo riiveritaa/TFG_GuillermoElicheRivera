@@ -288,5 +288,37 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error(error); }
     });
 
+    // --- LÓGICA DEL MENÚ PARA MÓVILES --- //
+
+    // 1. Abrir el menú al tocar el botón del sidebar
+    document.getElementById('btnMenuMovil')?.addEventListener('click', (e) => {
+        // Si estamos en móvil, evitamos que navegue a /dashboard y abrimos el modal
+        if (window.innerWidth <= 768) {
+            e.preventDefault(); 
+            document.getElementById('modalMenuMovil').style.display = 'flex';
+        }
+    });
+
+    // 2. Botón para cerrar el menú móvil
+    document.getElementById('btnCerrarMenuMovil')?.addEventListener('click', () => {
+        document.getElementById('modalMenuMovil').style.display = 'none';
+    });
+
+    // 3. Crear los "clics fantasmas"
+    const conectarBotonMovil = (idBotonMovil, idBotonOrdenador) => {
+        document.getElementById(idBotonMovil)?.addEventListener('click', () => {
+            // Cerramos este menú de móvil...
+            document.getElementById('modalMenuMovil').style.display = 'none';
+            // ...y simulamos un clic en el botón original del ordenador
+            document.getElementById(idBotonOrdenador)?.click(); 
+        });
+    };
+
+    // Conectamos cada botón nuevo con su original
+    conectarBotonMovil('btnMovilIngreso', 'btnIngreso');
+    conectarBotonMovil('btnMovilGasto', 'btnGasto');
+    conectarBotonMovil('btnMovilAñadirCuenta', 'btnAñadirCuenta');
+    conectarBotonMovil('btnMovilConfig', 'btnConfig');
+
     cargarDatos();
 });

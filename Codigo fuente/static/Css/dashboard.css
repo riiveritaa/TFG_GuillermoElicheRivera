@@ -150,6 +150,14 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); curso
     display: none;
 }
 
+.modalMenuMovil {
+    display: none;
+}
+
+.transaction-buttons-movil {
+    display: none;
+}
+
 /* =========================================================
    MEDIA QUERY PARA MÓVILES (Dashboard)
    ========================================================= */
@@ -214,4 +222,60 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); curso
         min-height: 400px;
         flex: none;
     }
+
+    .transaction-buttons {
+        display: none;
+    }
+
+    .modalMenuMovil {
+        display: flex;
+        position: fixed;
+        bottom: 70px; /* Justo encima del menú inferior */
+        left: 0;
+        width: 100%;
+        background-color: var(--card-bg);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 9999; /* Asegurarse de que esté por encima de otros elementos */
+    }
+
+    .transaction-buttons-movil {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+    }
+    
+.transaction-buttons-movil button { width: 100%; min-height: 45px; background-color: rgba(255,255,255,0.03); color: var(--primary-color); border: 1px solid transparent; border-radius: 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; font-weight: 500;}
+.btn-transaction-gasto { background-color: var(--red-color); color: var(--third-color); }
+.btn-config { background-color: var(--second-color); color: var(--third-color); }
+
+#btnMovilIngreso {
+background-color: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+#btnMovilGasto {
+    background-color: transparent;
+    border: 1px solid var(--red-color);
+    color: var(--red-color); /* Texto e icono en rojo */
+}
+#btnMovilConfig {
+    background-color: transparent;
+    border: 1px solid var(--second-color);
+    color: var(--second-color);
+}
+#btnMovilAñadirCuenta {
+    background-color: transparent;
+    border: 1px solid var(--second-color);
+    color: var(--second-color);
+}
+#btnCerrarMenuMovil {
+    background-color: transparent;
+    border: 1px solid var(--red-color);
+    color: var(--red-color);
+}
+
 }

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaptal - Panel Principal</title>
-    <link rel="stylesheet" href="/static/CSS/dashboard.css">
+    <!-- con app.py corriendo<link rel="stylesheet" href="/static/CSS/dashboard.css"> -->
+    <!--sin app.py corriendo--> <link rel="stylesheet" href="../static/Css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -14,7 +15,7 @@
         <nav class="sidebar">
             <div class="logo"></div>
             <ul class="menu">
-                <li><a href="/dashboard" class="nav-active" title="Panel Principal"><i class='bx bxs-dashboard'></i></a></li>
+                <li><a href="/dashboard" class="nav-active" title="Panel Principal" id="btnMenuMovil"><i class='bx bxs-dashboard'></i></a></li>
             </ul>
             <a href="/logout" class="logout-link" title="Cerrar sesión"><i class='bx bx-log-out'></i></a>
         </nav>
@@ -178,6 +179,18 @@
         </div>
     </div>
 
-    <script src="/static/js/dashboard.js"></script>
+    <div id="modalMenuMovil" class="modal-overlay">
+        <div class="modal-content card">
+            <div class="transaction-buttons-movil">
+                    <button class="btn-transaction-ingreso" id="btnMovilIngreso"><i class='bx bx-plus'></i> Nuevo Ingreso</button>
+                    <button class="btn-transaction-gasto" id="btnMovilGasto"><i class='bx bx-minus'></i> Nuevo Gasto</button>
+                    <button class="btn-config" id="btnMovilAñadirCuenta"><i class='bx bx-plus-circle'></i> Nueva Cuenta</button>
+                    <button class="btn-config" id="btnMovilConfig"><i class='bx bx-cog'></i> Ajustar Presupuesto</button>
+                    <button class="btn-cancelar" id="btnCerrarMenuMovil" style="margin-top: 15px;">Cancelar</button>
+                </div>
+        </div>
+    </div>
+    <!-- corriendo app.py <script src="/static/js/dashboard.js"></script>-->
+    <!--sin app.py corriendo--> <script src="../static/js/dashboard.js"></script>l
 </body>
 </html>
