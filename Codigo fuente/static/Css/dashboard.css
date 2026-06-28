@@ -273,9 +273,5 @@ background-color: transparent;
     color: var(--second-color);
 }
 #btnCerrarMenuMovil {
-    background-color: transparent;
-    border: 1px solid var(--red-color);
-    color: var(--red-color);
-}
-
+    background-color: var(--red-color);
 }
