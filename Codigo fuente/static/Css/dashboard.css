@@ -86,6 +86,8 @@ canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 10
 .btn-guardar:hover { opacity: 0.9; }
 .btn-cancelar { flex: 1; background: transparent; color: var(--second-color); border: 1px solid var(--second-color); padding: 12px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-family: 'Poppins';}
 .btn-cancelar:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.btn-cancelar-transferencia { flex: 1; background-color: var(--red-color); color: var(--third-color); padding: 12px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-family: 'Poppins';}
+.btn-cancelar-transferencia:hover { opacity: 0.9; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

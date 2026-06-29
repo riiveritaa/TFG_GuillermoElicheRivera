@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaptal - Panel Principal</title>
-    <!-- con app.py corriendo --> <link rel="stylesheet" href="/static/CSS/dashboard.css"> 
-    <!--sin app.py corriendo <link rel="stylesheet" href="../static/Css/dashboard.css"> -->
+    <!-- con app.py corriendo  <link rel="stylesheet" href="/static/CSS/dashboard.css"> -->
+    <!--sin app.py corriendo--> <link rel="stylesheet" href="../static/Css/dashboard.css"> 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -42,6 +42,7 @@
                         <h3>Cuentas y Capital</h3>
                         <div class="header-btns">
                             <button id="btnGestionCuentas" class="btn-icon"><i class='bx bx-slider-alt'></i></button>
+                            <button id="btnTransferenciaEntreCuentas" class="btn-icon"><i class="bx bx bx-transfer"></i></button>
                         </div>
                     </div>
                     <div class="chart-wrapper">
@@ -179,6 +180,35 @@
         </div>
     </div>
 
+<div id="modalTransferenciaEntreCuentas" class="modal-overlay">
+        <div class="modal-content card">
+            <h3 style="text-align: center; margin-bottom: 20px;">Transferencia entre Cuentas</h3>
+            <form id="formTransferirEntreCuentas">
+                
+                <div class="form-group">
+                    <label>Cuenta de origen</label>
+                    <select id="transferencia_origen_id" required></select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Cuenta de destino</label>
+                    <select id="transferencia_destino_id" required></select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Cantidad a transferir (€)</label>
+                    <input type="number" id="cantidad_transferencia" step="0.01" min="0.01" required>
+                </div>
+                
+                <div class="modal-actions-equal">
+                    <button type="button" class=" btn-cancelar-transferencia">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Transferir</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
     <div id="modalMenuMovil" class="modal-overlay">
         <div class="modal-content card">
             <div class="transaction-buttons-movil">
@@ -190,7 +220,7 @@
                 </div>
         </div>
     </div>
-    <!-- corriendo app.py --><script src="/static/js/dashboard.js"></script>
-    <!--sin app.py corriendo <script src="../static/js/dashboard.js"></script>l-->
+    <!-- corriendo app.py <script src="/static/js/dashboard.js"></script>-->
+    <!--sin app.py corriendo--> <script src="../static/js/dashboard.js"></script>
 </body>
 </html>

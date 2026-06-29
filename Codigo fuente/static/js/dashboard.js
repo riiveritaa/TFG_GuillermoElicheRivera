@@ -288,8 +288,26 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error(error); }
     });
 
-    // --- LÓGICA DEL MENÚ PARA MÓVILES --- //
+    document.getElementById('btnTransferenciaEntreCuentas').addEventListener('click', () => {
+        document.getElementById('modalTransferenciaEntreCuentas').style.display = 'flex';
+    })
 
+    document.getElemnetById('formTransferenciaEntreCuentas').addEventListener('submit'), async(e) => {
+        e.preventDefault();
+        //1. Leer los datos de los inputs 
+        const cuentaOrigen = document.getElementById('transferencia_origen_id').value;
+        const cuentaDestino = document.getElementById('transferencia_destino_id').value;
+        const cantidad = document.getElementById('cantidad_transferencia').value;
+        //2. La barrera de seguridad (validacion)
+        if (cuentaOrigen === cuentaDestino)
+            alert ("No puedes transferir diner a la misma cuenta");
+                return;
+        //3. El simulacro (imprimir por consola para)
+        console.log ('Tranferencia de la cuenta:  ${cuentaOrigen} a la cuenta ${cuentaDestino} de ${cantidad} euros');
+     //======================================//
+    // --- LÓGICA DEL MENÚ PARA MÓVILES --- //
+   //======================================//
+    
     // 1. Abrir el menú al tocar el botón del sidebar
     document.getElementById('btnMenuMovil')?.addEventListener('click', (e) => {
         // Si estamos en móvil, evitamos que navegue a /dashboard y abrimos el modal
@@ -321,4 +339,4 @@ document.addEventListener('DOMContentLoaded', () => {
     conectarBotonMovil('btnMovilConfig', 'btnConfig');
 
     cargarDatos();
-});
+}});
