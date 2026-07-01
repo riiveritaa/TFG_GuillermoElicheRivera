@@ -276,6 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
     enviarForm('formCuenta', '/api/crear_cuenta');
     enviarForm('formConfig', '/api/ajustar_presupuesto');
 
+
+     //================================//
+    // --- BOTON ELIMINAR CUENTAS --- //
+   //================================//
+
     document.getElementById('formTransferirEliminar')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const idBorrar = document.getElementById('id_cuenta_borrar_oculto').value;
@@ -288,11 +293,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error(error); }
     });
 
+     //===========================================//
+    // --- BOTON TRANSFERENCIA ENTRE CUENTAS --- //
+   //===========================================//
+
     document.getElementById('btnTransferenciaEntreCuentas').addEventListener('click', () => {
         document.getElementById('modalTransferenciaEntreCuentas').style.display = 'flex';
     })
 
-    document.getElemnetById('formTransferenciaEntreCuentas').addEventListener('submit'), async(e) => {
+    document.getElementById('formTransferirEntreCuentas').addEventListener('submit', async(e) => {
         e.preventDefault();
         //1. Leer los datos de los inputs 
         const cuentaOrigen = document.getElementById('transferencia_origen_id').value;
@@ -302,8 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cuentaOrigen === cuentaDestino)
             alert ("No puedes transferir diner a la misma cuenta");
                 return;
-        //3. El simulacro (imprimir por consola para)
-        console.log ('Tranferencia de la cuenta:  ${cuentaOrigen} a la cuenta ${cuentaDestino} de ${cantidad} euros');
+    });
+
+
+
      //======================================//
     // --- LÓGICA DEL MENÚ PARA MÓVILES --- //
    //======================================//
@@ -339,4 +350,4 @@ document.addEventListener('DOMContentLoaded', () => {
     conectarBotonMovil('btnMovilConfig', 'btnConfig');
 
     cargarDatos();
-}});
+});

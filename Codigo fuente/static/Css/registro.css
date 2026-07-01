@@ -180,7 +180,7 @@ a:hover {
 /* sincronizacion final */
 
 /* =========================================================
-   MEDIA QUERY PARA MÓVILES (Login y Registro)
+    MEDIA QUERY PARA MÓVILES (Login y Registro)
    ========================================================= */
 @media (max-width: 480px) {
     /* Ajustar la caja principal para que ocupe el 90% de la pantalla */
